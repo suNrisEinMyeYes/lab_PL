@@ -12,18 +12,9 @@ import shutil
 #@renderer_classes((TemplateHTMLRenderer, JSONRenderer))
 
 def index(request):
-    #root_dir='/home/mertakov/Desktop'
     root_dir=os.path.dirname(os.path.realpath(__file__))
     full_path =root_dir + request.path
-   # split_path = full_path.split('/')
-    #if (len(split_path[-1]) < 1):
-     #   file = split_path[-2]
-      #  folders = split_path[2:len(split_path)-2]
-    #else:
-     #   file = split_path[-1]
-      #  folders = split_path[2:len(split_path)-1]
     os.chdir(full_path)
-    #print(full_path)
     return(Response(os.listdir(path='.')))
 
 
@@ -36,9 +27,12 @@ def cut(url):
 @api_view(('GET',))
 def create(request):
     dirname=request.GET.get("q")
+    if dirname=='upload':
+        return Response("Bad idea to create folder with name upload")
     root_dir=os.path.dirname(os.path.realpath(__file__))
     full_path =root_dir + request.path
     os.mkdir(cut(full_path)+dirname)
+    os.chdir(cut(full_path))
     return(Response(os.listdir(path='.')))
 
 @api_view(('GET',))
